@@ -19,7 +19,10 @@ interface Orphanage {
   instructions: string,
   opening_hours: string,
   open_on_weekends: boolean,
-  images: Array<{ url: string}>
+  images: Array<{ 
+    id: number,
+    url: string
+  }>
 }
 
 interface RouteParms {
@@ -29,6 +32,7 @@ interface RouteParms {
 export default function Orphanage() {
   const parms = useParams<RouteParms>();
   const [orphanage, setOrphanage] = useState<Orphanage>();
+  const [activeImageIndex, setActiveImageIndex] = useState(0);
 
   console.log(orphanage);
 
@@ -48,27 +52,25 @@ export default function Orphanage() {
       <main>
 
         <div className="orphanage-details">
-          <img src={orphanage.images[0].url} alt={orphanage.name} />
+          <img src={orphanage.images[activeImageIndex].url} alt={orphanage.name} />
 
           <div className="images">
-            <button className="active" type="button">
-              <img src="https://www.gcd.com.br/wp-content/uploads/2020/08/safe_image.jpg" alt="Lar das meninas" />
-            </button>
-            <button type="button">
-              <img src="https://www.gcd.com.br/wp-content/uploads/2020/08/safe_image.jpg" alt="Lar das meninas" />
-            </button>
-            <button type="button">
-              <img src="https://www.gcd.com.br/wp-content/uploads/2020/08/safe_image.jpg" alt="Lar das meninas" />
-            </button>
-            <button type="button">
-              <img src="https://www.gcd.com.br/wp-content/uploads/2020/08/safe_image.jpg" alt="Lar das meninas" />
-            </button>
-            <button type="button">
-              <img src="https://www.gcd.com.br/wp-content/uploads/2020/08/safe_image.jpg" alt="Lar das meninas" />
-            </button>
-            <button type="button">
-              <img src="https://www.gcd.com.br/wp-content/uploads/2020/08/safe_image.jpg" alt="Lar das meninas" />
-            </button>
+            {orphanage.images.map((image, index) => {
+              return (
+                <button 
+                  key={image.id} 
+                  className={activeImageIndex === index ? "active": ""} 
+                  type="button"
+                  onClick={() => {
+                    setActiveImageIndex(index);
+                  }}
+                  >
+                  <img src={image.url} alt={orphanage.name} />
+                </button>
+              );
+            })}
+            
+
           </div>
           
           <div className="orphanage-details-content">
@@ -117,7 +119,7 @@ export default function Orphanage() {
               ) : (
                 <div className="open-on-weekends dont-open">
                   <FiInfo size={32} color="#FF669D" />
-                  Atendemos <br />
+                  Não Atendemos <br />
                   fim de semana
                 </div>
               )}
@@ -125,10 +127,10 @@ export default function Orphanage() {
               
             </div>
 
-            <button type="button" className="contact-button">
+            {/* <button type="button" className="contact-button">
               <FaWhatsapp size={20} color="#FFF" />
               Entrar em contato
-            </button>
+            </button> */}
           </div>
         </div>
       </main>
